@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 
 export default function CartPage() {
   const { cartItems, removeFromCart, getTotal, itemCount } = useCart();
-
   const router = useRouter();
 
   return (
@@ -14,7 +13,7 @@ export default function CartPage() {
       {/* Back to catalog */}
       <button
         onClick={() => router.push("/")}
-        className="flex items-center text-base text-neutral-700 font-archivo font-medium  hover:underline mb-6"
+        className="flex items-center text-base text-neutral-700 font-archivo font-medium hover:underline mb-6"
       >
         <ArrowLeft className="w-4 h-4 mr-1" />
         Back to Catalog
@@ -31,56 +30,55 @@ export default function CartPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Cart items */}
-          <div className="md:col-span-2 divide-y divide-gray-200">
-            {cartItems.map((game, index) => (
+          <div className="md:col-span-2 space-y-6">
+            {cartItems.map((game) => (
               <div
                 key={game.id}
-                className={`flex items-start justify-between gap-4 py-4 relative ${
-                  index === 0 ? "" : "pt-4"
-                }`}
+                className="relative bg-white rounded-lg border p-4 flex flex-col sm:flex-row sm:items-start sm:gap-4"
               >
-                {game.isNew && (
-                  <span className="absolute top-6 left-6 bg-stone-100 text-black text-[10px] px-2 py-1 rounded font-archivo">
-                    New
-                  </span>
-                )}
+                {/* Remove button */}
+                <button
+                  onClick={() => removeFromCart(game.id)}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-sm sm:static sm:ml-auto sm:self-start sm:mt-0 sm:order-3"
+                >
+                  ✕
+                </button>
+
+                {/* Game image */}
                 <img
                   src={game.image}
                   alt={game.name}
-                  className="w-28 h-28 object-cover rounded"
+                  className="w-full h-40 sm:w-28 sm:h-28 object-cover rounded mb-4 sm:mb-0"
                 />
 
-                <div className="flex-1">
-                  <p className="text-base font-bold font-archivo text-gray-500 uppercase mb-1">
-                    {game.genre}
-                  </p>
-                  <h2 className="text-sm font-bold font-archivo text-neutral-700">
-                    {game.name}
-                  </h2>
-                  {game.description && (
-                    <p className="text-sm font-normal font-archivo text-neutral-500 mt-1">
-                      {game.description}
+                {/* Info + price container */}
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start flex-1 w-full">
+                  {/* Info */}
+                  <div>
+                    <p className="text-[10px] font-bold font-archivo text-gray-500 uppercase mb-1">
+                      {game.genre}
                     </p>
-                  )}
-                  <p className="text-sm font-bold font-archivo text-neutral-700 mt-2 text-right">
-                    ${game.price}
-                  </p>
-                </div>
+                    <h2 className="text-sm font-bold font-archivo text-neutral-700">{game.name}</h2>
+                    {game.description && (
+                      <p className="text-sm font-normal font-archivo text-neutral-500 mt-1">
+                        {game.description}
+                      </p>
+                    )}
+                  </div>
 
-                <div className="flex flex-col items-end justify-between h-full">
-                  <button
-                    onClick={() => removeFromCart(game.id)}
-                    className="text-gray-400 hover:text-gray-600 text-sm"
-                  >
-                    ✕
-                  </button>
+                  {/* Price aligned right always */}
+                  <div className="text-right mt-2 sm:mt-0">
+                    <p className="text-sm font-bold font-archivo text-neutral-700">
+                      ${game.price}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Order Summary */}
-          <div>
+          <div className="w-full md:w-auto">
             <div className="bg-white p-6 rounded-lg border h-fit">
               <h3 className="text-xl font-bold font-archivo text-neutral-700 mb-2">Order Summary</h3>
               <p className="text-lg text-neutral-700 font-archivo font-normal mb-4">
