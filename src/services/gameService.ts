@@ -1,7 +1,9 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api/games";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "/api/games";
 
 export const getGames = async (genre: string, page: number) => {
-  const url = new URL(BASE_URL);
+  const url = new URL(BASE_URL, typeof window !== "undefined" ? window.location.origin : "http://localhost:3000");
+
   if (genre) url.searchParams.append("genre", genre);
   url.searchParams.append("page", String(page));
 
@@ -10,4 +12,3 @@ export const getGames = async (genre: string, page: number) => {
 
   return res.json();
 };
-
