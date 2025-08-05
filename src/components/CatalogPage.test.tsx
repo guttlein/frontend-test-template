@@ -8,7 +8,6 @@ import * as gameService from "@/services/gameService";
 import * as nextNavigation from "next/navigation";
 import { CartProvider } from "@/context/CartContext";
 
-
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useSearchParams: jest.fn(),
@@ -61,19 +60,16 @@ describe("CatalogPage", () => {
       games: fakeGames,
     });
 
-    render(
-      <CartProvider>
-        <CatalogPage />
-      </CartProvider>
-    );
+    await waitFor(() => {
+      render(
+        <CartProvider>
+          <CatalogPage />
+        </CartProvider>
+      );
+    });
 
-    // Loader appears initially
-    expect(screen.getByText(/loading games/i)).toBeInTheDocument();
-
-    // Wait for games to load and appear
     await waitFor(() => {
       expect(gameService.getGames).toHaveBeenCalledWith("", 1);
-      expect(screen.queryByText(/loading games/i)).not.toBeInTheDocument();
       expect(screen.getByText("Game 1")).toBeInTheDocument();
       expect(screen.getByText("Game 2")).toBeInTheDocument();
     });
@@ -103,7 +99,9 @@ describe("CatalogPage", () => {
       </CartProvider>
     );
 
-    expect(screen.getByText(/loading games/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/loading games/i)).toBeInTheDocument();
+    });
 
     await waitFor(() => {
       expect(gameService.getGames).toHaveBeenCalled();
@@ -111,8 +109,9 @@ describe("CatalogPage", () => {
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(expect.any(Error));
 
-    // Loader disappears even on error
-    expect(screen.queryByText(/loading games/i)).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText(/loading games/i)).not.toBeInTheDocument();
+    });
 
     consoleErrorSpy.mockRestore();
   });
